@@ -1,3 +1,5 @@
+import React from "react";
+import CalendarClient from "../components/calendar-client";
 import Image from "next/image";
 import Link from "next/link";
 import localFont from "next/font/local";
@@ -38,7 +40,7 @@ export default function Sidebar() {
 
             {/* Bottom: calendar placeholder */}
             <div>
-                {/* Syncfusion's Calendar Component*/}
+                <CalendarClient />
             </div>
         </aside>
     );

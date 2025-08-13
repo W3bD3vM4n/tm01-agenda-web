@@ -1,7 +1,19 @@
+import React from "react";
+import { registerLicense } from '@syncfusion/ej2-base';
 import type { Metadata } from "next";
 import "./globals.css";
 import { Geist, Geist_Mono } from "next/font/google";
 import Sidebar from "@/components/sidebar";
+
+const license = process.env.SYNCFUSION_LICENSE ?? '';
+
+if (license) {
+    registerLicense(license);
+} else {
+    if (process.env.NODE_ENV === 'development') {
+        console.warn('SYNCFUSION_LICENSE not set');
+    }
+}
 
 const geistSans = Geist({
     variable: "--font-geist-sans",
