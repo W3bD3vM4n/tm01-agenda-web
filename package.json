@@ -19,6 +19,7 @@
     "@syncfusion/ej2-react-schedule": "^30.2.4",
     "@syncfusion/ej2-schedule": "^30.2.4",
     "@syncfusion/ej2-splitbuttons": "^30.2.4",
+    "cldr-data": "^36.0.4",
     "next": "15.4.5",
     "react": "19.1.0",
     "react-dom": "19.1.0"

@@ -3,7 +3,7 @@ import { registerLicense } from '@syncfusion/ej2-base';
 import type { Metadata } from "next";
 import "./globals.css";
 import { Geist, Geist_Mono } from "next/font/google";
-import Sidebar from "@/components/sidebar";
+import Sidebar from "@/components/server/sidebar";
 
 const license = process.env.SYNCFUSION_LICENSE ?? '';
 
@@ -44,9 +44,8 @@ export default function RootLayout({
             <main className="flex-1 p-6 bg-gray-50 min-h-screen">
                 {children}
             </main>
-        </div>
 
-        {/* Mini-calendar component here */}
+        </div>
       </body>
     </html>
   );

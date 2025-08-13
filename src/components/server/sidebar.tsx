@@ -1,11 +1,11 @@
 import React from "react";
-import CalendarClient from "../components/calendar-client";
 import Image from "next/image";
 import Link from "next/link";
 import localFont from "next/font/local";
+import SpanishCalendarClient from "../client/spanish-calendar-client";
 
 const museoModerno = localFont({
-    src: '../../public/fonts/MuseoModerno-SemiBold.woff2',
+    src: '../../../public/fonts/MuseoModerno-SemiBold.woff2',
     weight: '600',
     display: 'swap',
 })
@@ -14,7 +14,7 @@ export default function Sidebar() {
     return (
         <aside className="flex flex-col justify-between bg-indigo-600 text-white w-72 p-4 min-h-screen">
             {/* Top: logo + title */}
-            <div className="flex flex-col items-center space-y-2 mt-4 mb-8">
+            <Link href="/" className="flex flex-col items-center space-y-2 mt-4 mb-8">
                 <Image
                     src="/images/technology.png"
                     alt="MyManageHub Logo"
@@ -22,7 +22,7 @@ export default function Sidebar() {
                     height={96}
                 />
                 <span className={`${museoModerno.className} text-base font-semibold`}>MyManageHub</span>
-            </div>
+            </Link>
 
             {/* Middle: nav links */}
             <nav className="flex-grow">
@@ -41,7 +41,7 @@ export default function Sidebar() {
             {/* Bottom: calendar placeholder */}
             <div className="mt-6 flex justify-center">
                 <div className="mx-auto">
-                    <CalendarClient />
+                    <SpanishCalendarClient />
                 </div>
             </div>
         </aside>
