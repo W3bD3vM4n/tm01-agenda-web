@@ -12,7 +12,7 @@ const museoModerno = localFont({
 
 export default function Sidebar() {
     return (
-        <aside className="flex flex-col justify-between bg-indigo-600 text-white w-64 h-screen p-4">
+        <aside className="flex flex-col justify-between bg-indigo-600 text-white w-72 p-4 min-h-screen">
             {/* Top: logo + title */}
             <div className="flex flex-col items-center space-y-2 mt-4 mb-8">
                 <Image
@@ -39,8 +39,10 @@ export default function Sidebar() {
             </nav>
 
             {/* Bottom: calendar placeholder */}
-            <div>
-                <CalendarClient />
+            <div className="mt-6 flex justify-center">
+                <div className="mx-auto">
+                    <CalendarClient />
+                </div>
             </div>
         </aside>
     );
