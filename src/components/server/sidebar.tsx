@@ -2,7 +2,7 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import localFont from "next/font/local";
-import SpanishCalendarClient from "../client/spanish-calendar-client";
+import SpanishCalendar from "../client/spanish-calendar";
 
 const museoModerno = localFont({
     src: '../../../public/fonts/MuseoModerno-SemiBold.woff2',
@@ -41,7 +41,7 @@ export default function Sidebar() {
             {/* Bottom: calendar placeholder */}
             <div className="mt-6 flex justify-center">
                 <div className="mx-auto">
-                    <SpanishCalendarClient />
+                    <SpanishCalendar />
                 </div>
             </div>
         </aside>

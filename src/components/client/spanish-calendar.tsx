@@ -1,7 +1,7 @@
 'use client';
 
 import React from "react";
-import { loadCldr, L10n, setCulture } from '@syncfusion/ej2-base';
+import { loadCldr, L10n, setCulture } from "@syncfusion/ej2-base";
 import { CalendarComponent } from "@syncfusion/ej2-react-calendars";
 
 // Import CLDR JSON files
@@ -156,7 +156,7 @@ L10n.load({
 // Set culture to Spanish globally
 setCulture("es");
 
-export default function SpanishCalendarClient() {
+export default function SpanishCalendar() {
     return(
         <CalendarComponent id="es-calendar" locale="es" />
     );
