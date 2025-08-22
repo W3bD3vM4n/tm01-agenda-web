@@ -99,6 +99,7 @@ body {
 
 /* SYNCFUSION: Schedule */
 
+/*1. Whole schedule component*/
 .e-schedule .e-month-view .e-work-cells {
     position: relative;
 }
@@ -118,4 +119,19 @@ body {
     overflow: hidden;
     text-overflow: ellipsis;
     vertical-align: middle;
+}
+
+/*2. Cell per task*/
+/* Make the main container transparent and remove its border/padding */
+.e-schedule .e-appointment {
+    background: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+    border-radius: 4px;
+}
+
+/* Force the intermediate wrappers to be full height */
+.e-schedule .e-appointment .e-appointment-details,
+.e-schedule .e-appointment .e-appointment-details > div {
+    height: 100%;
 }

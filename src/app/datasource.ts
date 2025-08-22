@@ -7,7 +7,7 @@ export type SyncEvent = {
     StartTime: Date;
     EndTime: Date;
     CategoryColor?: string;
-    // keep the original backend task if you need it
+    Description?: string;
     _raw?: TaskResponseDTO;
 };
 
@@ -45,6 +45,7 @@ export async function fetchEvents(start: Date, end: Date): Promise<SyncEvent[]> 
             StartTime: parseLocalDateTimeString(t.startDate) ?? new Date(),
             EndTime: parseLocalDateTimeString(t.endDate) ?? new Date(),
             CategoryColor: t.color ?? undefined,
+            Description: t.detail ?? undefined,
             _raw: t,
         }));
 

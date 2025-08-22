@@ -28,6 +28,22 @@ function weekRangeFromDates(dates: Date[]) {
     return { start, end };
 }
 
+// Receive the event data as props
+const eventTemplate = (props: SyncEvent) => {
+    return (
+        <div
+            className="w-full h-full p-1"
+            style={{
+                backgroundColor: props.CategoryColor,
+                color: 'black'
+            }}
+        >
+            <div className="font-semibold truncate">{props.Subject}</div>
+            <div className="text-xs truncate">{props.Description}</div>
+        </div>
+    );
+};
+
 export default function SpanishScheduleWeeklyButMonthlyFetch() {
     const scheduleRef = useRef<ScheduleComponent | null>(null);
     const [events, setEvents] = useState<SyncEvent[]>([]);
@@ -161,7 +177,10 @@ export default function SpanishScheduleWeeklyButMonthlyFetch() {
         }
     }
 
-    const eventSettings: EventSettingsModel = { dataSource: events };
+    const eventSettings: EventSettingsModel = {
+        dataSource: events,
+        template: eventTemplate
+    };
 
     return (
         <>
