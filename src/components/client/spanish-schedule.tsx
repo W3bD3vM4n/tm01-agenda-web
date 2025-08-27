@@ -10,7 +10,8 @@ import {
     EventSettingsModel,
     ActionEventArgs,
 } from "@syncfusion/ej2-react-schedule";
-import { fetchEvents, type SyncEvent } from "@/app/datasource";
+import {createTask, deleteTask, fetchEvents, type SyncEvent, taskDtoToSyncEvent, updateTask} from "@/app/datasource";
+import { TaskResponseDTO } from "@/types/task";
 
 function monthKey(d: Date) {
     return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`; // "YYYY-MM"
@@ -23,8 +24,10 @@ function monthRangeFromDate(d: Date) {
     return { start, end };
 }
 function weekRangeFromDates(dates: Date[]) {
-    const start = new Date(dates[0]); start.setHours(0,0,0,0);
-    const end = new Date(dates[dates.length - 1]); end.setHours(23,59,59,999);
+    const start = new Date(dates[0]);
+    start.setHours(0,0,0,0);
+    const end = new Date(dates[dates.length - 1]);
+    end.setHours(23,59,59,999);
     return { start, end };
 }
 
@@ -53,6 +56,7 @@ export default function SpanishScheduleWeeklyButMonthlyFetch() {
     const fetchPromises = useRef<Map<string, Promise<void>>>(new Map());
     const abortRef = useRef<AbortController | null>(null);
 
+    // --- Data fetching and caching ---
     async function ensureMonths(monthKeys: string[], monthDates: Date[]) {
         const promises: Promise<void>[] = [];
 
@@ -170,16 +174,78 @@ export default function SpanishScheduleWeeklyButMonthlyFetch() {
         return () => clearTimeout(timerId);
     }, []);
 
-    function onActionComplete(args: ActionEventArgs) {
-        if ((args.requestType === "viewNavigate" || args.requestType === "dateNavigate") && scheduleRef.current) {
+    // --- Update cache and refresh UI ---
+    const updateCacheAndRefresh = (updatedEvent: SyncEvent, action: 'add' | 'update' | 'delete') => {
+        const key = monthKey(updatedEvent.StartTime);
+        const monthCache = cacheRef.current.get(key);
+        if (!monthCache) return; // Should not happen if event was visible
+
+        let newMonthCache: SyncEvent[] = [];
+        switch (action) {
+            case 'add':
+                newMonthCache = [...monthCache, updatedEvent];
+                break;
+            case 'update':
+                newMonthCache = monthCache.map(e => e.Id === updatedEvent.Id ? updatedEvent : e);
+                break;
+            case 'delete':
+                newMonthCache = monthCache.filter(e => e.Id !== updatedEvent.Id);
+                break;
+        }
+        cacheRef.current.set(key, newMonthCache);
+
+        // Refresh the visible events from the updated cache
+        if (scheduleRef.current) {
             const dates = scheduleRef.current.getCurrentViewDates();
-            window.setTimeout(() => loadForVisibleDates(dates), 60);
+            const { start, end } = weekRangeFromDates(dates);
+            showWeekFromCached(start, end);
+        }
+    }
+
+    // --- Handle CRUD actions ---
+    async function onActionComplete(args: ActionEventArgs) {
+        // Handle navigation
+        if (args.requestType === "viewNavigate" || args.requestType === "dateNavigate") {
+            if (scheduleRef.current) {
+                const dates = scheduleRef.current.getCurrentViewDates();
+                window.setTimeout(() => loadForVisibleDates(dates), 60);
+            }
+            return;
+        }
+
+        // Handle CRUD
+        if (args.requestType === "eventCreated") {
+            const newEvent = (args.data as SyncEvent[])[0];
+            const createdTaskDto = await createTask(newEvent);
+            if (createdTaskDto) {
+                updateCacheAndRefresh(taskDtoToSyncEvent(createdTaskDto), "add");
+            }
+        } else if (args.requestType === "eventChanged") {
+            const changedEvent = (args.data as SyncEvent[])[0];
+            const updatedTaskDto = await updateTask(changedEvent);
+            if (updatedTaskDto) {
+                updateCacheAndRefresh(taskDtoToSyncEvent(updatedTaskDto), "update");
+            }
+        } else if (args.requestType === "eventRemoved") {
+            const deletedEvent = (args.data as SyncEvent[])[0];
+            const success = await deleteTask(deletedEvent.Id);
+            if (success) {
+                updateCacheAndRefresh(deletedEvent, "delete");
+            }
         }
     }
 
     const eventSettings: EventSettingsModel = {
         dataSource: events,
-        template: eventTemplate
+        template: eventTemplate,
+        // Add fields mapping for the editor window
+        fields: {
+            id: "Id",
+            subject: { name: "Subject", title: "Title" },
+            startTime: { name: "StartTime", title: "Start Time" },
+            endTime: { name: "EndTime", title: "End Time" },
+            description: { name: "Description", title: "Details" },
+        }
     };
 
     return (

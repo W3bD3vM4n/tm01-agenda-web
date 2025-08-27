@@ -2,8 +2,8 @@ export interface TaskCreateDTO {
     title: string;
     startDate?: string;
     endDate?: string;
-    relevance: number;
-    energy: number;
+    // relevance: number;
+    // energy: number;
     color?: string | null;
     detail?: string | null;
 }
@@ -13,8 +13,8 @@ export interface TaskResponseDTO {
     title: string;
     startDate?: string;
     endDate?: string;
-    relevance: number;
-    energy: number;
+    // relevance: number;
+    // energy: number;
     color?: string | null;
     detail?: string | null;
 }
